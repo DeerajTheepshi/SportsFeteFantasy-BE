@@ -1,10 +1,13 @@
 const express = require("express");
 const rootRouter = require('./routes/root.routes');
+const userRouter = require('./routes/user.routes');
+const playerRouter = require('./routes/player.routes');
+const matchRouter = require('./routes/match.routes');
 const bodyParser = require('body-parser');
 const fs = require('fs');
 
 const app = express();
-const port = 6000;
+const port = 6001;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -30,7 +33,11 @@ app.use('/assets/', (req,res, next) => {
     etag: true,
     maxAge: '365d',
 }));
+
 app.use('/', rootRouter);
+app.use('/user/',userRouter);
+app.use('/match/', matchRouter);
+app.use('/player/', playerRouter);
 
 app.listen(port, () => {
     console.log(`App running on port ${port}`)

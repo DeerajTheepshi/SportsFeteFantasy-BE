@@ -1,3 +1,5 @@
+const crypto  = require("crypto");
+
 module.exports.generateRandomString = (length) => {
     randomString = crypto.randomBytes(length).toString('hex');
     return randomString.substr(0, length);

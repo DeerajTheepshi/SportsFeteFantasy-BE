@@ -14,7 +14,7 @@ let playerSchema = new mongoose.Schema(
             default: "CSK"
         },
         totalPoints :{
-            type : int
+            type : Number
         }
     }
 )

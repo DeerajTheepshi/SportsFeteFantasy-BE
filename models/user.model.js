@@ -8,26 +8,27 @@ let userSchema = new mongoose.Schema(
             type: String,
             lowercase: true,
             default: null,
-            required: true,
-            unique: true,
         },
         password: {
             type: String,
-            default: null,
-            required: true
+            default: "",
         },
         //PERSONAL DETAILS
         rollNo: String,
         name: { type: String, default: "" },
         contact: {type: String, default: ""},
-        department: { type: String, default: "ICE" },
-        //TEAM DETAILS
+        //TEAM DETAILS 
+        teamName : {
+            type : String,
+        },
+        //SQUAD DETAILS
         squad : {
             type: [mongoose.Types.ObjectId]
-        },
-        //SELECTED PLAYERS RO BE CHOOSED BEFORE EVERY MATCH
-        selectedPlayersForMatch : {
-            type: [mongoose.Types.ObjectId]
+        },        
+        //SCORE
+        points : {
+            type: Number,
+            default: 0,
         },
         //SESSION DETAILS
         session: {
@@ -36,6 +37,7 @@ let userSchema = new mongoose.Schema(
         },
         isAdmin : {
             type : Boolean,
+            defaut: false,
         }
     }
 )

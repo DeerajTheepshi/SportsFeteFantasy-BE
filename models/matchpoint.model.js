@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 
 let matchPointSchema = new mongoose.Schema(
     {
-        mathchId : {
+        matchId : {
             type:  mongoose.Types.ObjectId,
             required : true
         },
@@ -12,9 +12,9 @@ let matchPointSchema = new mongoose.Schema(
             required : true
         }, 
         points : {
-            type: int,
+            type: Number,
             required : true
         }
     }
 )
-module.exports = mongoose.model('MatchPoint', playerSchema);
+module.exports = mongoose.model('MatchPoint', matchPointSchema);

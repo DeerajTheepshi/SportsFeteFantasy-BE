@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 let matchSchema = new mongoose.Schema(
     {
         matchNo : {
-            type: int, 
+            type: Number, 
             default: 1,
             required: true,
         },
@@ -25,6 +25,14 @@ let matchSchema = new mongoose.Schema(
         },
         awayEleven : {
             type: [mongoose.Types.ObjectId]
+        }, 
+        isLive : {
+            type: Boolean,
+            default: false,
+        },
+        isSimulated : {
+            type: Boolean,
+            default: false,
         }
     }
 )
