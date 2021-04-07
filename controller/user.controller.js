@@ -45,7 +45,7 @@ login = async (req, res) => {
     let password = req.body.password;
     let user = await userModel.findOne({email: email});
     if(!user) {
-        return res.status(200).jsonp({message:"User Not Found"});
+        return res.status(200).jsonp({status: 403, message:"User Not Found"});
     }
     let matches = await bcrypt.compare(password, user.password);
     if (matches) {

@@ -185,6 +185,26 @@ getNotLiveMatches = async (req,res)=>{
     res.status(200).jsonp({status: 200, data: data});
 }
 
+
+getScoreCardForMatch = async (req, res) => {
+    let matchId = req.body.matchId;
+    let homePlaying11 = req.body.home11s;
+    let awayPlaying11 = req.body.away11s;
+    let data = await matchPointModel.find({matchId: matchId});
+    if(data.length === 0) {
+        return res.status(200).jsonp({status:500, message: "Match Has Not Been Scored Yet"});
+    }
+    let homePts = {}, awayPts = {};
+    for(let i=0;i<data.length;i++){
+        if(homePlaying11.includes(""+data[i].playerId)){
+            homePts[data[i].playerId] = data[i].points;
+        } else if(awayPlaying11.includes(""+data[i].playerId)) {
+            awayPts[data[i].playerId] = data[i].points;
+        }
+    }
+    return res.status(200).jsonp({status:200, homePts: homePts, awayPts : awayPts});
+}
+
 module.exports = {
     createMatch: createMatch,
     updatePlaying11: updatePlaying11,
@@ -194,4 +214,5 @@ module.exports = {
     simulateMatch: simulateMatch, 
     getNotLiveMatches: getNotLiveMatches,
     undoSimulation: undoSimulation,
+    getScoreCardForMatch: getScoreCardForMatch
 }

@@ -57,4 +57,10 @@ matchRouter.post("/undoSimulation",
     matchController.undoSimulation
 )
 
+matchRouter.post("/getMatchScorecard",
+    utils.initializeLocal,
+    userController.checkSession, 
+    matchController.getScoreCardForMatch
+)
+
 module.exports = matchRouter;
