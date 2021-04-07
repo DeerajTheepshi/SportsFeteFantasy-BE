@@ -8,6 +8,7 @@ let userSchema = new mongoose.Schema(
             type: String,
             lowercase: true,
             default: null,
+            unique: true,
         },
         password: {
             type: String,

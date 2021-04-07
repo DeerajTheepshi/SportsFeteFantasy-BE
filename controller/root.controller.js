@@ -3,12 +3,13 @@ const gameModel = require('../models/game.model');
 const _ = require('lodash');
 
 createUsersWithTeam = async (req, res) => {
-    let rollNos = req.body.rollNos;
+    let emails = req.body.emails;
     let squad = req.body.squad;
     let teamName = req.body.teamName;
-    for(let i=0;i<rollNos.length;i++){
+    for(let i=0;i<emails.length;i++){
         let user = new userModel({
-            rollNo: rollNos[i],
+            email: emails[i],
+            rollNo: "110117026",
             teamName : teamName,
             squad: squad,
             isAdmin: false,

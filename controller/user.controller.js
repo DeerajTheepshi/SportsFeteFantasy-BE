@@ -6,6 +6,23 @@ const playerModel = require('../models/player.model');
 const userMatchModel = require('../models/userMatch.model');
 const saltRounds = 10;
 
+
+checkTeamSelection = async (selectedPlayers) => {
+    if(selectedPlayers.length > 3) {
+        return false;
+    } 
+    let playersCount = {};
+    for(let i=0;i<selectedPlayers.length;i++){
+        let player = await playerModel.findOne({_id: selectedPlayers[i]});
+        playersCount[player.teamName] = playersCount[player.teamName] ? playersCount[player.teamName]+1:1;
+    }
+    for(let teamName in playersCount){
+        if(playersCount.teamName > 2) {
+            return false;
+        }
+    }
+}
+
 checkSession = async (req, res, next) => {
     if(!req.body.session)
         return res.status(200).jsonp({status: 403, message:"User not Logged In"});
@@ -27,11 +44,12 @@ checkAdmin = async(req, res, next) => {
 
 register = async (req, res) => {
     let hashedPass = await bcrypt.hash(req.body.password, saltRounds);
-    let user = await userModel.findOne({rollNo: req.body.rollNo});
+    let user = await userModel.findOne({email: req.body.email});
     if(!user) {
         return res.status(200).jsonp({status: 403, message:"You are Not Authorized"});
+    } else if(user && user.name !== "Unamed") {
+        return res.status(200).jsonp({status: 403, message:"User Already Exists"});
     }
-    user.email = req.body.email;
     user.password = hashedPass;
     user.name = req.body.name;
     user.contact = req.body.contact;
@@ -61,6 +79,9 @@ login = async (req, res) => {
 setTeam = async (req, res) => {
     let user = req.locals.user;
     let selectedPlayers = req.body.selectedPlayers;
+    if(!check(selectedPlayers)){
+        return res.status(200).jsonp({status: 403, message:"You can pick maximum 3 players, not all from the same team"});
+    }
     let matchId = req.body.matchId;
     let userMatch = await userMatchModel.findOne({userId: user._id, matchId: matchId});
     if(userMatch) await userMatchModel.deleteOne({_id: userMatch._id});
