@@ -25,7 +25,7 @@ createUsersWithTeam = async (req, res) => {
                     teamName: teamName,
                     squad: squad,
                     isAdmin: false,
-                    name: "Unamed",
+                    name: teamName+"-"+i,
                     selectedPlayersForMatch: []
                 });
                 await user.save();
