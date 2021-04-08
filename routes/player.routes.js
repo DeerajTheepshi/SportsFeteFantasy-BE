@@ -29,6 +29,12 @@ playerRouter.post("/getPlayers",
     playerController.getPlayers,
 )
 
+playerRouter.post("/getTeamPlayers",
+    utils.initializeLocal,
+    userController.checkSession,
+    playerController.getTeamPlayers,
+)
+
 playerRouter.post("/getAllPlayers",
     utils.initializeLocal,
     userController.checkSession,

@@ -4,6 +4,7 @@ const _ = require('lodash');
 const bcrypt = require('bcrypt');
 const playerModel = require('../models/player.model');
 const userMatchModel = require('../models/userMatch.model');
+const matchModel = require('../models/match.model');
 const saltRounds = 10;
 
 
@@ -105,11 +106,15 @@ setTeam = async (req, res) => {
     try {
         let user = req.locals.user;
         let selectedPlayers = req.body.selectedPlayers;
-        if (!check(selectedPlayers)) {
+        if (!checkTeamSelection(selectedPlayers)) {
             return res.status(200).jsonp({ status: 403, message: "You can pick maximum 3 players, not all from the same team" });
         }
         let matchId = req.body.matchId;
         let userMatch = await userMatchModel.findOne({ userId: user._id, matchId: matchId });
+        let match = await matchModel.findOne({_id: matchId});
+        if(match.isLive) {
+            return res.status(200).jsonp({ status: 403, message: "Sorry, The Match has Started, You can't pick team now." });
+        }
         if (userMatch) await userMatchModel.deleteOne({ _id: userMatch._id });
         userMatch = new userMatchModel({
             userId: user._id,

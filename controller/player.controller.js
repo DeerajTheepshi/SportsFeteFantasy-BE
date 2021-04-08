@@ -59,6 +59,17 @@ getPlayers = async (req, res) => {
     }
 }
 
+getTeamPlayers = async (req, res) => {
+    try {
+        let teamName = req.body.teamName;
+        let data = await playerModel.find({teamName: teamName})        
+        return res.status(200).jsonp({ status: 200, data: data })
+    } catch (e) {
+        console.log(e);
+        return res.status(200).jsonp({ status: 500, message: "Server did not respond properly" });
+    }
+}
+
 getAllPlayers = async (req, res) => {
     try {
         let data = await playerModel.find();
@@ -75,4 +86,5 @@ module.exports = {
     getTeamSquad: getTeamSquad,
     getPlayers: getPlayers,
     getAllPlayers: getAllPlayers,
+    getTeamPlayers: getTeamPlayers
 }

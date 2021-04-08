@@ -228,20 +228,34 @@ getNotLiveMatches = async (req, res) => {
 getScoreCardForMatch = async (req, res) => {
     try {
         let matchId = req.body.matchId;
-        let homePlaying11 = req.body.home11s;
-        let awayPlaying11 = req.body.away11s;
+        let homeTeam = req.body.homeTeam;
+        let awayTeam = req.body.awayTeam;
+        
         let data = await matchPointModel.find({ matchId: matchId });
         if (data.length === 0) {
             return res.status(200).jsonp({ status: 500, message: "Match Has Not Been Scored Yet" });
         }
+
         let homePts = {}, awayPts = {};
-        for (let i = 0; i < data.length; i++) {
-            if (homePlaying11.includes("" + data[i].playerId)) {
+        let homePlayers = await playerModel.distinct("_id", {teamName: homeTeam});
+        let awayPlayers = await playerModel.distinct("_id", {teamName: awayTeam});
+
+        homePlayers = homePlayers.map((id) => {
+            return ""+id;
+        });
+        awayPlayers = awayPlayers.map((id) => {
+            return ""+id;
+        })
+
+        for(let i=0;i<data.length;i++){
+            let matchPoint = data[i];
+            if(homePlayers.includes(""+matchPoint.playerId)){
                 homePts[data[i].playerId] = data[i].points;
-            } else if (awayPlaying11.includes("" + data[i].playerId)) {
+            } else if(awayPlayers.includes(""+matchPoint.playerId)){
                 awayPts[data[i].playerId] = data[i].points;
             }
         }
+
         return res.status(200).jsonp({ status: 200, homePts: homePts, awayPts: awayPts });
     } catch (e) {
         console.log(e);

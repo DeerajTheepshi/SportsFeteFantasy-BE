@@ -10,7 +10,7 @@ let playerSchema = new mongoose.Schema(
         },
         teamName : {
             type: String, 
-            enum: ["CSK", "MI", "RCB", "KXIP", "KKR", "DC", "SRH", "RR"],
+            enum: ["CSK", "MI", "RCB", "PBKS", "KKR", "DC", "SRH", "RR"],
             default: "CSK"
         },
         totalPoints :{
