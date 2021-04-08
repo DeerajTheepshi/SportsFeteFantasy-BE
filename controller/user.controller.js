@@ -106,6 +106,7 @@ setTeam = async (req, res) => {
     try {
         let user = req.locals.user;
         let selectedPlayers = req.body.selectedPlayers;
+        let starPlayer = req.body.starPlayer;
         if (!checkTeamSelection(selectedPlayers)) {
             return res.status(200).jsonp({ status: 403, message: "You can pick maximum 3 players, not all from the same team" });
         }
@@ -121,6 +122,7 @@ setTeam = async (req, res) => {
             matchId: matchId,
             squad: selectedPlayers,
             pointsTaken: 0,
+            starPlayer: starPlayer,
         })
         await userMatch.save();
         return res.status(200).jsonp({ status: 200, message: "Team Has been Successfully Set" });
@@ -177,7 +179,7 @@ getPlayersForMatch = async (req, res) => {
         }
         let userMatch = await userMatchModel.findOne({ userId: user._id, matchId: matchId });
         if (!userMatch) return res.status(200).jsonp({ status: 200, data: [] });
-        return res.status(200).jsonp({ status: 200, data: userMatch.squad });
+        return res.status(200).jsonp({ status: 200, data: userMatch.squad, starPlayer: userMatch.starPlayer });
     } catch (e) {
         console.log(e);
         return res.status(200).jsonp({ status: 500, message: "Server did not respond properly" });

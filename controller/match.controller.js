@@ -71,16 +71,6 @@ updatePtsForMatch = async (req, res) => {
             }
         })
         session.endSession();
-        session = await playerModel.startSession();
-        await session.withTransaction(async () => {
-            for (let i = 0; i < playerDetails.length; i++) {
-                let player = await playerModel.findOne({ _id: playerDetails[i]._id });
-                let playerPts = ptsDetails[i];
-                player.totalPoints += playerPts;
-                await player.save();
-            }
-        })
-        session.endSession();
         res.status(200).jsonp({ status: 200, message: "Points Updated Successfully" });
     } catch (e) {
         console.log(e);
@@ -144,6 +134,7 @@ simulateMatch = async (req, res) => {
                 }
 
                 let selectedPlayers = userMatch.squad;
+                let starPlayer = userMatch.starPlayer;
                 for (let j = 0; j < selectedPlayers.length; j++) {
                     let playerId = selectedPlayers[j];
                     let playerDataForMatch = await matchPointModel.findOne({
@@ -155,8 +146,13 @@ simulateMatch = async (req, res) => {
                         continue; //Do nothing
                     } else {
                         let playerPtsForMatch = playerDataForMatch.points;
-                        userMatch.pointsTaken += playerPtsForMatch;
-                        user.points += playerPtsForMatch;
+                        if(""+playerId === ""+starPlayer){
+                            userMatch.pointsTaken += 2*playerPtsForMatch;
+                            user.points += 2*playerPtsForMatch;
+                        } else {
+                            userMatch.pointsTaken += playerPtsForMatch;
+                            user.points += playerPtsForMatch;
+                        }
                         await userMatch.save();
                         await user.save();
                     }

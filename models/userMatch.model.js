@@ -12,6 +12,9 @@ let userMatchSchema = new mongoose.Schema(
         squad: {
             type: [mongoose.Types.ObjectId],
         },
+        starPlayer: {
+            type: mongoose.Types.ObjectId,
+        },
         pointsTaken: {
             type: Number
         }
