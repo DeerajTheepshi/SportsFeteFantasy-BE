@@ -63,7 +63,7 @@ register = async (req, res) => {
         let user = await userModel.findOne({ email: req.body.email });
         if (!user) {
             return res.status(200).jsonp({ status: 403, message: "You are Not Authorized" });
-        } else if (user && user.name !== "Unamed") {
+        } else if (user && user.password !== "") {
             return res.status(200).jsonp({ status: 403, message: "User Already Exists" });
         }
         user.password = hashedPass;
@@ -153,7 +153,7 @@ getAllUsers = async (req, res) => {
         let withTeam = req.body.withTeam;
         let users;
         if (withTeam)
-            users = await userModel.find();
+            users = await userModel.find({isAdmin: false});
         else
             users = await userModel.find({ squad: [] });
         return res.status(200).jsonp({ status: 200, data: users });
