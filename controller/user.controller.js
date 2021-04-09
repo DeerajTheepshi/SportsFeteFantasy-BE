@@ -8,7 +8,7 @@ const matchModel = require('../models/match.model');
 const saltRounds = 10;
 
 
-checkTeamSelection = async (selectedPlayers) => {
+check = async (selectedPlayers) => {
     try {
         if (selectedPlayers.length > 3) {
             return false;
@@ -18,11 +18,14 @@ checkTeamSelection = async (selectedPlayers) => {
             let player = await playerModel.findOne({ _id: selectedPlayers[i] });
             playersCount[player.teamName] = playersCount[player.teamName] ? playersCount[player.teamName] + 1 : 1;
         }
-        for (let teamName in playersCount) {
-            if (playersCount.teamName > 2) {
+        let teamNames = Object.keys(playersCount);
+        for (let i=0;i<teamNames.length;i++) {
+            let teamName = teamNames[i];
+            if (playersCount[teamName] > 2) {
                 return false;
             }
         }
+        return true
     } catch (e) {
         console.log(e);
         return res.status(200).jsonp({ status: 500, message: "Server did not respond properly" });
@@ -110,7 +113,7 @@ setTeam = async (req, res) => {
         if(!starPlayer || starPlayer===""){
             return res.status(200).jsonp({ status: 403, message: "Please Select A Star Player" });
         }
-        if (!checkTeamSelection(selectedPlayers)) {
+        if (!await check(selectedPlayers)) {
             return res.status(200).jsonp({ status: 403, message: "You can pick maximum 3 players, not all from the same team" });
         }
         let matchId = req.body.matchId;
