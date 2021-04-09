@@ -107,6 +107,9 @@ setTeam = async (req, res) => {
         let user = req.locals.user;
         let selectedPlayers = req.body.selectedPlayers;
         let starPlayer = req.body.starPlayer;
+        if(!starPlayer || starPlayer===""){
+            return res.status(200).jsonp({ status: 403, message: "Please Select A Star Player" });
+        }
         if (!checkTeamSelection(selectedPlayers)) {
             return res.status(200).jsonp({ status: 403, message: "You can pick maximum 3 players, not all from the same team" });
         }

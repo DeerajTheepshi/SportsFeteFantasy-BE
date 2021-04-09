@@ -5,6 +5,8 @@ const playerRouter = require('./routes/player.routes');
 const matchRouter = require('./routes/match.routes');
 const bodyParser = require('body-parser');
 const fs = require('fs');
+const bcrypt = require('bcrypt');
+
 
 const app = express();
 const port = 7027;
