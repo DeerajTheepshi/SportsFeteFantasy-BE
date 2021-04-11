@@ -192,6 +192,27 @@ getPlayersForMatch = async (req, res) => {
     }
 }
 
+getPlayerForMatchForUser = async (req, res) => {
+    try {
+        let userId = req.body.userId;
+        let matchId = req.body.matchId;
+        if(!userId || !matchId){
+            return res.status(200).jsonp({ status: 500, message: "Insufficient Data" });
+        }
+        let userMatch = await userMatchModel.findOne({ userId: userId, matchId: matchId });
+        if (!userMatch) return res.status(200).jsonp({ status: 200, data: [] });
+        let players = [];
+        for(let i=0;i<userMatch.squad.length;i++){
+            let player = await playerModel.findOne({_id: userMatch.squad[i]});
+            players.push(player);
+        }
+        return res.status(200).jsonp({ status: 200, data: players, starPlayer: userMatch.starPlayer });
+    } catch (e) {
+        console.log(e);
+        return res.status(200).jsonp({ status: 500, message: "Server did not respond properly" });
+    }
+}
+
 
 module.exports = {
     register: register,
@@ -202,5 +223,6 @@ module.exports = {
     setSquad: setSquad,
     getUserData: getUserData,
     getAllUsers: getAllUsers,
-    getPlayersForMatch: getPlayersForMatch
+    getPlayersForMatch: getPlayersForMatch, 
+    getPlayerForMatchForUser: getPlayerForMatchForUser
 }
