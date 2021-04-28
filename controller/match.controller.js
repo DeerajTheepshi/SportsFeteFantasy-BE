@@ -80,7 +80,7 @@ updatePtsForMatch = async (req, res) => {
 
 getAllMatches = async (req, res) => {
     try {
-        let data = await matchModel.find();
+        let data = await matchModel.find().sort({matchNo: 1});
         let modData = [];
         for (let i = 0; i < data.length; i++) {
             let match = data[i];
@@ -212,7 +212,7 @@ undoSimulation = async (req, res) => {
 
 getNotLiveMatches = async (req, res) => {
     try {
-        let data = await matchModel.find({ isLive: false });
+        let data = await matchModel.find({ isLive: false }).sort({matchNo: 1});
         res.status(200).jsonp({ status: 200, data: data });
     } catch (e) {
         console.log(e);

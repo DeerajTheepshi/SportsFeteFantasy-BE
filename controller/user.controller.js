@@ -166,7 +166,7 @@ getAllUsers = async (req, res) => {
         let withTeam = req.body.withTeam;
         let users;
         if (withTeam)
-            users = await userModel.find({isAdmin: false});
+            users = await userModel.find({isAdmin: false}, {name:1, email: 1, teamName: 1, points: 1 });
         else
             users = await userModel.find({ squad: [] });
         return res.status(200).jsonp({ status: 200, data: users });
