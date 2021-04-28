@@ -166,10 +166,26 @@ getAllUsers = async (req, res) => {
         let withTeam = req.body.withTeam;
         let users;
         if (withTeam)
-            users = await userModel.find({isAdmin: false}, {name:1, email: 1, teamName: 1, points: 1 });
+            users = await userModel.find({isAdmin: false}, {name:1, email: 1, teamName: 1, points: 1, squad: 1 });
         else
             users = await userModel.find({ squad: [] });
         return res.status(200).jsonp({ status: 200, data: users });
+    } catch (e) {
+        console.log(e);
+        return res.status(200).jsonp({ status: 500, message: "Server did not respond properly" });
+    }
+}
+
+getPosition = async (req, res) => {
+    try {
+        let users = await userModel.find().sort({points: -1});
+        let user = req.locals.user;
+        for(let i=0;i<users.length;i++){
+            if((users[i]._id+"") === (user._id+"")) {
+                return res.status(200).jsonp({ status: 200, data: i+1 });
+            }
+        }
+        return res.status(200).jsonp({ status: 200, data: -1 });
     } catch (e) {
         console.log(e);
         return res.status(200).jsonp({ status: 500, message: "Server did not respond properly" });
@@ -224,5 +240,6 @@ module.exports = {
     getUserData: getUserData,
     getAllUsers: getAllUsers,
     getPlayersForMatch: getPlayersForMatch, 
-    getPlayerForMatchForUser: getPlayerForMatchForUser
+    getPlayerForMatchForUser: getPlayerForMatchForUser, 
+    getPosition: getPosition,
 }

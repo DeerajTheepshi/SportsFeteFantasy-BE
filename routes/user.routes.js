@@ -41,4 +41,10 @@ userRouter.post("/getSquadForUserMatch",
     userController.getPlayerForMatchForUser
 )
 
+userRouter.post("/getPosition",
+    utils.initializeLocal,
+    userController.checkSession,
+    userController.getPosition,
+)
+
 module.exports = userRouter;
